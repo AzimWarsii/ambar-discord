@@ -1,3 +1,108 @@
 {
-   
+    "badges": [
+        {
+            "id": "79f2bf111c8a1702759848ba26be9b9a",
+            "name": "MOST LIKED AUTHOR",
+            "prefix": "\ud83d\udcd6",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1120719002386313226/logo_hepamida_alcachofa-png.png"
+        },
+        {
+            "id": "947921b758367d3c87b4ec59e6ba1664",
+            "name": "MVP AMBAR TEST",
+            "prefix": "",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1181722494546215055/shield.png?ex=658217d6&is=656fa2d6&hm=9501bcfe7a73f688dc4da9f7ea43042852db5b8ea4d2a2c3ddfdd14695344503&"
+        },
+        {
+            "id": "f11f7b1aacda85ba66a038d9f838c56c",
+            "name": "Token Holder",
+            "prefix": "\ud83e\ude99",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1195152395487952906/gems1000px.png?ex=65b2f367&is=65a07e67&hm=27bd9d50d4737b12e66dfb69c2ba58b5d76f053858cbd896ea3b87277c490e63&"
+        },
+        {
+            "id": "b6e19fa9b25485753accc84a9968ec1f",
+            "name": "Early Achiever Level 1",
+            "prefix": "\ud83d\udc8e",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1195154237961797662/1000px.png?ex=65b2f51f&is=65a0801f&hm=4629f084323631d4d0329a16f5c2176750d95f67e994439e8cd29247f2183e80&"
+        },
+        {
+            "id": "6600ef7a81c74e23529e65e0d88ea8fb",
+            "name": "Early Achiever Level 2",
+            "prefix": "\ud83d\udc8e\ud83d\udc8e",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1195154624471126027/31000px.png?ex=65b2f57b&is=65a0807b&hm=8f55ab2ca86ec707dc68addb626f4e60b9e244df7eb4d2bc8fde17e0d1c1ebab&"
+        },
+        {
+            "id": "b34782cb93581a0ea8c7f70bbf9d2173",
+            "name": "Early Achiever Level 3",
+            "prefix": "\ud83d\udc8e\ud83d\udc8e\ud83d\udc8e",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1195154730289221723/51000px.png?ex=65b2f594&is=65a08094&hm=e99f5225e337068203ce92cf7e2bb465d7a1562688731d0c20cbdadcd4fc300d&"
+        },
+        {
+            "id": "481dec8ef1077372d27630f45e121b5e",
+            "name": "new",
+            "prefix": "new",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333341/1202190797836124220/Vector.jpg?ex=65cc8e6d&is=65ba196d&hm=ca813edffeadb3a89c5ab943f3d800c56220b72e498910f995c6cca6e591eadb&"
+        },
+        {
+            "id": "5537d5a4d56cc26f2936568012f9e44e",
+            "name": "New9038",
+            "prefix": "New9038",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": null
+        },
+        {
+            "id": "60616dd532d699b7a3bc305078aaae72",
+            "name": ";",
+            "prefix": "l",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1202181793130749983/1205938612210770010/Screenshot_2024-01-25_053741.png?ex=65da30da&is=65c7bbda&hm=0be84cacf4a57b7ef1d6a673da29ef5e3c7e6a89b8e41b893f62ff76e2dd1709&"
+        },
+        {
+            "id": "57d0bfc9f93812df24229e8692b95799",
+            "name": "New123",
+            "prefix": "Mentor",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": null
+        },
+        {
+            "id": "7ecdbf14ba770265d29c26e9864b96da",
+            "name": "fhg",
+            "prefix": "fgh",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** badge!\nYou now have {user_badge_count} badges in total.\n\nI hope you enjoy your **{full_name}** badge!",
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1202181793130749983/1206381064659140658/Screenshot_2024-01-25_053741.png?ex=65dbcceb&is=65c957eb&hm=fdc7320b36d36e1d2cd26833d454663194ae5e9cdf88c10c736f77c92d85cfe0&"
+        }
+    ],
+    "users": {
+        "352442476889505792": {
+            "947921b758367d3c87b4ec59e6ba1664": 1,
+            "79f2bf111c8a1702759848ba26be9b9a": 1
+        },
+        "981664874318934076": {
+            "79f2bf111c8a1702759848ba26be9b9a": 1,
+            "947921b758367d3c87b4ec59e6ba1664": 1
+        },
+        "1165957114146082919": {
+            "f11f7b1aacda85ba66a038d9f838c56c": 1,
+            "b6e19fa9b25485753accc84a9968ec1f": 1,
+            "6600ef7a81c74e23529e65e0d88ea8fb": 1,
+            "b34782cb93581a0ea8c7f70bbf9d2173": 1
+        },
+        "907060602604757013": {
+            "b6e19fa9b25485753accc84a9968ec1f": 1
+        },
+        "1147986284724371516": {
+            "b6e19fa9b25485753accc84a9968ec1f": 1,
+            "f11f7b1aacda85ba66a038d9f838c56c": 1
+        },
+        "938146587983626300": {
+            "b6e19fa9b25485753accc84a9968ec1f": 1,
+            "79f2bf111c8a1702759848ba26be9b9a": 1
+        }
+    }
 }

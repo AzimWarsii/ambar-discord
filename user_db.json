@@ -1,0 +1,52 @@
+{
+    "users": {
+        "1194121846640103474": {
+            "messages": 40,
+            "time": 23.58475160598755,
+            "reactionsGiven": 10,
+            "clipsShared": 7,
+            "reactionsRecieved": 6,
+            "playingTime": {
+                "Counter-Strike 12": 69.92167234420776,
+                "Counter-Strike 2": 44.989046812057495
+            },
+            "surveys": 1,
+            "eventsCheckin": [
+                "None"
+            ],
+            "eventsDuration": 1
+        },
+        "938146587983626300": {
+            "messages": 55,
+            "time": 26.596456289291382,
+            "reactionsGiven": 13,
+            "clipsShared": 8,
+            "reactionsRecieved": 7,
+            "playingTime": {
+                "Counter-Strike 12": 69.92167234420776,
+                "Counter-Strike 2": 9.986537456512451
+            },
+            "surveys": 1,
+            "eventsCheckin": [
+                "None"
+            ],
+            "eventsDuration": 1
+        },
+        "756531892299497483": {
+            "messages": 5,
+            "time": 0,
+            "reactionsGiven": 1,
+            "clipsShared": 0,
+            "reactionsRecieved": 0,
+            "playingTime": {
+                "Counter-Strike 12": 0,
+                "Counter-Strike 2": 29.910979986190796
+            },
+            "surveys": 0,
+            "eventsCheckin": [
+                "None"
+            ],
+            "eventsDuration": 0
+        }
+    }
+}

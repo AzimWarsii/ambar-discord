@@ -4,12 +4,15 @@ from discord import app_commands
 from main import Bot
 
 import os
+
 from typing import (
     TypeAlias,
     Optional,
 )
 
+
 User: TypeAlias = discord.User | discord.Member
+
 
 class Badge:
     saving_attributes: tuple[str, ...] = ('id', 'name', 'prefix', 'on_grant', 'image_url')

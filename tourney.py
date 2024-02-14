@@ -47,7 +47,7 @@ class Match:
         return str(self)
 
 
-Team = list[int]
+Team = list[int | None]
 Round = list[Match]
 
 

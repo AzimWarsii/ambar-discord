@@ -1,4 +1,54 @@
 {
-    "trophies": [],
-    "users": {}
+    "trophies": [
+        {
+            "id": "2007e54b4641267f4393b8baeac51456",
+            "name": "AMBAR GENESIS TOURNAMENT",
+            "prefix": "\ud83c\udfc6",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** trophy!\nYou now have {user_trophy_count} trophies ({user_trophy_weight} weight) in total.\n\nI hope you enjoy your **{full_name}** trophy!",
+            "weight": 1500,
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333342/1120714728621215834/Recurso_33x.png"
+        },
+        {
+            "id": "d63f09789967dc45fcfa5ed0ea1c37af",
+            "name": "PRODUCT REVIEW SHOWDOWN",
+            "prefix": "\u2705",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** trophy!\nYou now have {user_trophy_count} trophies ({user_trophy_weight} weight) in total.\n\nI hope you enjoy your **{full_name}** trophy!",
+            "weight": 500,
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333342/1120715450624528504/logo_hepamida_alcachofa-png.png"
+        },
+        {
+            "id": "6d7a7d7ac5bca1a9c404703b18a2d484",
+            "name": "ADVERTISING  FOCUS GROUP",
+            "prefix": "\ud83d\udcfc",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** trophy!\nYou now have {user_trophy_count} trophies ({user_trophy_weight} weight) in total.\n\nI hope you enjoy your **{full_name}** trophy!",
+            "weight": 1000,
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333342/1120715886555312148/favicon.ico"
+        },
+        {
+            "id": "b40eccb717e54f69f12616eec61bc175",
+            "name": "Best tester",
+            "prefix": "",
+            "on_grant": "Hey, {user_mention}! You have obtained the **{name}** trophy!\nYou now have {user_trophy_count} trophies ({user_trophy_weight} weight) in total.\n\nI hope you enjoy your **{full_name}** trophy!",
+            "weight": 10,
+            "image_url": "https://cdn.discordapp.com/ephemeral-attachments/1120489771425333342/1121790503982219284/favicon-1.png"
+        }
+    ],
+    "users": {
+        "352442476889505792": {
+            "2007e54b4641267f4393b8baeac51456": 2,
+            "d63f09789967dc45fcfa5ed0ea1c37af": 1,
+            "6d7a7d7ac5bca1a9c404703b18a2d484": 1,
+            "b40eccb717e54f69f12616eec61bc175": 1
+        },
+        "1031941388327202907": {
+            "d63f09789967dc45fcfa5ed0ea1c37af": 1
+        },
+        "981664874318934076": {
+            "d63f09789967dc45fcfa5ed0ea1c37af": 1
+        },
+        "907060602604757013": {
+            "6d7a7d7ac5bca1a9c404703b18a2d484": 1,
+            "d63f09789967dc45fcfa5ed0ea1c37af": 1
+        }
+    }
 }
