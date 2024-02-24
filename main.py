@@ -15,6 +15,7 @@ from typing import (
     Any,
 )
 if TYPE_CHECKING:
+    from event import Events
     from quest import Quests
     from badge import Badges
     from trophy import Trophies
@@ -26,7 +27,7 @@ if TYPE_CHECKING:
 timers = {}
 timers1 = {}
 
-'''https://discord.com/api/oauth2/authorize?client_id=1194121846640103474&permissions=8&scope=bot%20applications.command'''
+'''https://discord.com/oauth2/authorize?client_id=1194121846640103474&permissions=8&scope=bot'''
 with open('config.json', encoding='utf8') as file: config = json.load(file)
 token = config.get('token')
 owner_ids = config.get('owner_ids').copy()
@@ -39,8 +40,9 @@ class Bot(commands.Bot):
     trophy_cog: 'Trophies'
     item_cog: 'Items'
     ambar_cog: 'Ambar'
+    event_cog: 'Events'
     def __init__(self) -> None:
-        self.cog_names = ['tourney', 'badge', 'trophy', 'item', 'ambar', 'quest', ]
+        self.cog_names = ['tourney', 'badge', 'trophy', 'item', 'ambar', 'quest','event' ]
         super().__init__(
             command_prefix=self.get_prefixes,
             activity=discord.Activity(type=discord.ActivityType.listening, name='you'),
@@ -51,7 +53,8 @@ class Bot(commands.Bot):
             owner_ids=set(owner_ids),
         )
         
-
+        with open('event_db.json', encoding='utf8') as file:
+            self.event_db = json.load(file)
         with open('user_db.json', encoding='utf8') as file:
             self.user_db = json.load(file)
         with open('tourney_db.json', encoding='utf8') as file:
@@ -66,8 +69,8 @@ class Bot(commands.Bot):
             self.ambar_db = json.load(file)
         with open('quest_db.json', encoding='utf8') as file:
             self.quest_db = json.load(file)
-        with open('game_db.json','r',encoding='utf-8') as json_file:
-            self.game_db = json.load(json_file)
+        with open('activity_db.json','r',encoding='utf-8') as json_file:
+            self.activity_db = json.load(json_file)
         self.embed_color = 0x9845A8
 
 
@@ -75,10 +78,14 @@ class Bot(commands.Bot):
         with open('user_db.json', 'w', encoding='utf8') as file:
             json.dump(self.user_db, file, indent=4)  
 
-    def save_game_db(self) -> None:
-        with open('game_db.json', 'w', encoding='utf8') as file:
-            json.dump(self.game_db, file, indent=4)  
+    def save_activity_db(self) -> None:
+        with open('activity_db.json', 'w', encoding='utf8') as file:
+            json.dump(self.activity_db, file, indent=4)  
     
+    def save_event_db(self) -> None:
+        with open('event_db.json', 'w', encoding='utf8') as file:
+            json.dump(self.event_db, file, indent=4)  
+
     def save_quest_db(self) -> None:
         with open('quest_db.json', 'w', encoding='utf8') as file:
             json.dump(self.quest_db, file, indent=4)  
@@ -170,11 +177,17 @@ async def on_member_join(member):
     else:
         bot.user_db['users'][f'{member.id}'] = {
         "messages": 0,
+        "chnannel_messages": {
+                "id": 0
+            },
         "time": 0,
-        "reactionsGiven": 0,
-        "clipsShared": 0,
+        "channel_time": {
+                "id": 0
+            },
+        "reactions_given": 0,
+        "clips_shared": 0,
         "reactionsRecieved": 0,
-        "playingTime": {
+        "playing_time": {
             "Counter-Strike 12": 0,
             "Counter-Strike 2": 0
         },
@@ -182,7 +195,9 @@ async def on_member_join(member):
         "eventsCheckin": [
             "None"
         ],
-        "eventsDuration": 0
+        "eventsDuration": {
+                "id": 0
+            }
         }
 
         bot.save_user_db()
@@ -193,11 +208,20 @@ async def on_message(message):
   
   bot.user_db['users'][f'{message.author.id}']['messages'] += 1
   bot.save_user_db()
+  channel_id=  str(message.channel.id)
 
+  if channel_id in bot.user_db['users'][f'{message.author.id}']['channel_messages']:
+        bot.user_db['users'][f'{message.author.id}']['channel_messages'][f'{channel_id}'] += 1
+        bot.save_user_db()
+  else:
+        bot.user_db['users'][f'{message.author.id}']['channel_messages'][f'{channel_id}'] = 1
+        bot.save_user_db()
+
+  print(message)
   for attch in message.attachments:
     attch_type, attch_format = attch.content_type.split('/') # Attachment.content_type returns a {type}/{file_format} string
     if attch_type == 'video':
-       bot.user_db['users'][f'{message.author.id}']['clipsShared'] += 1
+       bot.user_db['users'][f'{message.author.id}']['clips_shared'] += 1
        bot.save_user_db()
 
 
@@ -206,26 +230,143 @@ async def on_voice_state_update(member ,oldState, newState):
   newUserChannel = newState.channel
   oldUserChannel = oldState.channel
 
+
+
   if oldUserChannel is None and newUserChannel != None:
     timers1[member.id] = time.time()
     print(f"{member.id} joined {newUserChannel}")
 
   if oldUserChannel != None and newUserChannel is None:
     start_time = timers1.pop(member.id, None)
-    if start_time:
-        audiotime = time.time() - start_time
-        bot.user_db['users'][f'{member.id}']['time'] += audiotime
+    end_time =  time.time()
+    channel_id = str(oldState.channel.id)
+    audiotime =  end_time - start_time
+    bot.user_db['users'][f'{member.id}']['time'] += audiotime
+    bot.save_user_db()
+
+    if channel_id in bot.user_db['users'][f'{member.id}']['channel_time']:
+        bot.user_db['users'][f'{member.id}']['channel_time'][f'{channel_id}'] += audiotime
         bot.save_user_db()
-        print(f"{member.id} listened  for {audiotime}") 
+    else:
+        bot.user_db['users'][f'{member.id}']['channel_time'][f'{channel_id}'] = audiotime
+        bot.save_user_db()
+    
+    for obj in bot.event_db['events']:
+        if oldState.channel.id == int(obj['channel_id']):
+            if  start_time <= obj["start_time"] and end_time >= obj["end_time"]:
+                eventaudiotime =  obj["end_time"] - obj["start_time"]
+                print("1")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+            elif  start_time <= obj["start_time"] and end_time <= obj["end_time"] and end_time > obj["start_time"]:
+                eventaudiotime =  end_time - obj["start_time"]
+                print("2")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+            elif  start_time >= obj["start_time"] and end_time <= obj["end_time"] :
+                eventaudiotime =  end_time - start_time
+                print("3")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+
+            elif  start_time >= obj["start_time"] and start_time < obj["end_time"] and end_time >= obj["end_time"]:
+                eventaudiotime =  obj["end_time"] - start_time
+                print("4")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+        
+    print(f"{member.id} listened  for {audiotime}")
+
 
   if  oldUserChannel != None and newUserChannel != None and oldUserChannel.id != newUserChannel.id:
-    print("Will use later for events tracking")
+    start_time = timers1.pop(member.id, None)
+    end_time =  time.time()
+    channel_id =oldState.channel.id 
+    audiotime =  end_time - start_time
+    bot.user_db['users'][f'{member.id}']['time'] += audiotime
+    bot.save_user_db()
+
+    if channel_id in bot.user_db['users'][f'{member.id}']['channel_time']:
+        bot.user_db['users'][f'{member.id}']['chennel_time'][f'{channel_id}'] += audiotime
+        bot.save_user_db()
+    else:
+        bot.user_db['users'][f'{member.id}']['channel_time'][f'{channel_id}'] = audiotime
+        bot.save_user_db()
+
+
+    for obj in bot.event_db['events']:
+        if oldState.channel.id == int(obj['channel_id']):
+            if  start_time <= obj["start_time"] and end_time >= obj["end_time"]:
+                eventaudiotime =  obj["end_time"] - obj["start_time"]
+                print("1")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+            elif  start_time <= obj["start_time"] and end_time <= obj["end_time"] and end_time > obj["start_time"]:
+                eventaudiotime =  end_time - obj["start_time"]
+                print("2")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+            elif  start_time >= obj["start_time"] and end_time <= obj["end_time"] :
+                eventaudiotime =  end_time - start_time
+                print("3")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+
+            elif  start_time >= obj["start_time"] and start_time < obj["end_time"] and end_time >= obj["end_time"]:
+                eventaudiotime =  obj["end_time"] - start_time
+                print("4")
+                if obj['id'] in bot.user_db['users'][f'{member.id}']['eventsDuration']:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] += eventaudiotime
+                    bot.save_user_db()
+                else:
+                    bot.user_db['users'][f'{member.id}']['eventsDuration'][f'{obj['id']}'] = eventaudiotime
+                    bot.save_user_db()
+
+
+        print(f"{member.id} listened  for {audiotime}")
+        timers1[member.id] = time.time()
+        print(f"{member.id} joined {newUserChannel}")  
 
 
 @bot.event
 async def on_reaction_add(reaction, user):
 
-    bot.user_db['users'][f'{user.id}']['reactionsGiven'] += 1
+    bot.user_db['users'][f'{user.id}']['reactions_given'] += 1
     bot.save_user_db()
 
     for attch in reaction.message.attachments:
@@ -238,7 +379,7 @@ async def on_reaction_add(reaction, user):
 @bot.event
 async def on_reaction_remove(reaction, user):
 
-    bot.user_db['users'][f'{user.id}']['reactionsGiven'] -= 1
+    bot.user_db['users'][f'{user.id}']['reactions_given'] -= 1
     bot.save_user_db()
 
     for attch in reaction.message.attachments:
@@ -252,20 +393,20 @@ async def on_reaction_remove(reaction, user):
 async def on_presence_update(before, after, ):
  
 
-    # Check if the member started playing a game
-    if (not before.activity or before.activity.name not in bot.game_db['tracked'] ) and (after.activity and after.activity.name in bot.game_db['tracked'] ):
+    # Check if the member started playing a activity
+    if (not before.activity or before.activity.name not in bot.activity_db['tracked'] ) and (after.activity and after.activity.name in bot.activity_db['tracked'] ):
         timers[after.id] = time.time()
         print(f"{after.id} started playing {after.activity.name}")
-    # Check if the member stopped playing a game
-    elif before.activity  and before.activity.name in bot.game_db['tracked'] and (not after.activity or after.activity.name not in bot.game_db['tracked'] ):
+    # Check if the member stopped playing a activity
+    elif before.activity  and before.activity.name in bot.activity_db['tracked'] and (not after.activity or after.activity.name not in bot.activity_db['tracked'] ):
         start_time = timers.pop(after.id, None)
         if start_time:
             playtime = time.time() - start_time
-            if before.activity.name in bot.user_db['users'][f'{after.id}']['playingTime']:
-                bot.user_db['users'][f'{after.id}']['playingTime'][f'{before.activity.name}'] += playtime
+            if before.activity.name in bot.user_db['users'][f'{after.id}']['playing_time']:
+                bot.user_db['users'][f'{after.id}']['playing_time'][f'{before.activity.name}'] += playtime
                 bot.save_user_db()
             else:
-                bot.user_db['users'][f'{after.id}']['playingTime'][f'{before.activity.name}'] = playtime
+                bot.user_db['users'][f'{after.id}']['playing_time'][f'{before.activity.name}'] = playtime
                 bot.save_user_db()
 
             print(f"{after.id} played {before.activity.name} for {playtime}") 

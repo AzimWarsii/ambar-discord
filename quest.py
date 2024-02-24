@@ -17,19 +17,24 @@ User: TypeAlias = discord.User | discord.Member
 
 
 class Quest:
-    saving_attributes: tuple[str, ...] = ('id', 'name', 'des', 'badge' , 'messages', 'reactions_given', 'clips_shared', 'playing_time', 'time' , 'game_name'  )
-    def __init__(self, cog: 'Quests', id: Optional[str], name: str, des: Optional[str] , badge:str , messages:str, reactions_given:str , clips_shared:str ,  playing_time:str , time:str , game_name:str  ) -> None:
+    saving_attributes: tuple[str, ...] = ('id', 'name', 'des', 'badge' , 'badge1', 'messages', 'reactions_given', 'clips_shared', 'playing_time', 'time' , 'activity_name' , 'message_channelId' , 'message_count' , 'time_channelId' , 'time_count' )
+    def __init__(self, cog: 'Quests', id: Optional[str], name: str, des: Optional[str] , badge:str , badge1:Optional[str] , messages:int, reactions_given:int , clips_shared:int ,  playing_time:int , time:int , activity_name:str, message_channelId:Optional[str] , message_count:Optional[str] , time_channelId:Optional[str] , time_count:Optional[str]   ) -> None:
         self.cog = cog
         self.id = id or os.urandom(16).hex()
         self.name = name
         self.des = des
         self.badge = badge
+        self.badge1 = badge1
+        self.message_channelId = message_channelId
+        self.message_count = message_count
+        self.time_channelId = time_channelId
+        self.time_count = time_count
         self.messages = messages
         self.clips_shared = clips_shared
         self.reactions_given = reactions_given
         self.playing_time = playing_time
         self.time = time
-        self.game_name = game_name
+        self.activity_name = activity_name
         # self.reactionsRecieved = reactionsRecieved
         # self.surveys = surveys       
         # self.eventsDuration = eventsDuration
@@ -62,14 +67,19 @@ class Quest:
 
 
 class CreationModal(discord.ui.Modal):
-    def __init__(self, cog: 'Quests', user:User, des:Optional[str], badge:str , name:str, game_name:str ) -> None:
+    def __init__(self, cog: 'Quests', user:User, des:Optional[str], badge:str , badge1:Optional[str] , name:str, activity_name:str , message_channelId:Optional[str] , message_count:Optional[str] , time_channelId:Optional[str] , time_count:Optional[str]  ) -> None:
         super().__init__(timeout=300.0, title='Create Quest')
         self.cog = cog
         self.user = user
         self.name = name
         self.badge = badge
+        self.badge1 = badge1
+        self.message_channelId = message_channelId
+        self.message_count = message_count
+        self.time_channelId = time_channelId
+        self.time_count = time_count
         self.des = des
-        self.game_name = game_name
+        self.activity_name = activity_name
     
         self.messages = discord.ui.TextInput(
             label='Messages Sent',
@@ -89,7 +99,7 @@ class CreationModal(discord.ui.Modal):
         )
         
         self.playing_time = discord.ui.TextInput(
-            label='Time Spent playing Games',
+            label='Time Spent playing activitys',
             placeholder='0',
             required=False,
         )
@@ -142,17 +152,17 @@ class CreationModal(discord.ui.Modal):
             )
             return
         
-        quest = Quest(cog=self.cog, id=None, name=self.name, des=self.des , badge=self.badge, game_name=self.game_name , messages=messages , reactions_given=reactions_given , clips_shared = clips_shared, playing_time = playing_time, time=time )
+        quest = Quest(cog=self.cog, id=None, name=self.name, des=self.des , badge=self.badge, badge1=self.badge1, activity_name=self.activity_name , messages=messages , reactions_given=reactions_given , clips_shared = clips_shared, playing_time = playing_time, time=time , message_channelId=self.message_channelId , message_count=self.message_count , time_channelId=self.time_channelId , time_count=self.time_count )
         # reactionsRecieved =reactionsRecieved ,
         # surveys = surveys,
         # eventsDuration = eventsDuration,
         # eventsCheckin = eventsCheckin
         quest.save()
-        # with open('games_db.json','r',encoding='utf-8') as json_file:
-        #     games_converted = json.load(json_file)
+        # with open('activitys_db.json','r',encoding='utf-8') as json_file:
+        #     activitys_converted = json.load(json_file)
 
-        self.cog.bot.game_db['tracked'].append(f'{self.game_name}')
-        self.cog.bot.save_game_db()
+        self.cog.bot.activity_db['tracked'].append(f'{self.activity_name}')
+        self.cog.bot.save_activity_db()
         await interaction.response.send_message(
             embed=self.cog.bot.embed(
                 title='Quest Created',
@@ -168,7 +178,7 @@ class Quests(commands.GroupCog, name='quest'):
     @app_commands.command(name='create', description='Create a quest')
     @app_commands.default_permissions(administrator=True)
     @commands.has_guild_permissions(administrator=True)
-    async def create(self, interaction: discord.Interaction, name:str, badge_name:str, game_name:str, description: Optional[str] = None) -> None:
+    async def create(self, interaction: discord.Interaction, name:str, badge_name:str,  activity_name:str,badge_name1: Optional[str] = None , description: Optional[str] = None, message_channel:Optional[str]= None , message_count:Optional[str]= None , time_channel:Optional[str] = None, time_count:Optional[str]= None) -> None:
         if not await self.bot.is_admin(interaction=interaction): return
         #image_url = image.url if image is not None else None
         # quest = await self.find_with_send(interaction=interaction, name=name)
@@ -186,52 +196,158 @@ class Quests(commands.GroupCog, name='quest'):
              ),
             ) 
             return  
-        await interaction.response.send_modal(CreationModal(cog=self, user=interaction.user, des=description , name=name, badge=badge_name , game_name=game_name))
+        if badge_name1 not in li and badge_name1 != None:
+            await interaction.response.send_message(
+             embed=self.bot.embed(
+                title='Invalid Badge',
+                description=f'There is no such badge.',
+             ),
+            ) 
+            return  
+        await interaction.response.send_modal(CreationModal(cog=self, user=interaction.user, des=description , name=name, badge=badge_name ,badge1=badge_name1, activity_name=activity_name ,message_channelId=message_channel , message_count=message_count , time_channelId=time_channel , time_count=time_count))
 
-    @app_commands.command(name='delete', description='Delete a quest')
-    @app_commands.default_permissions(administrator=True)
-    @commands.has_guild_permissions(administrator=True)
-    async def delete(self, interaction: discord.Interaction, name: str) -> None:
-        if not await self.bot.is_admin(interaction=interaction): return
-        quest = await self.find_with_send(interaction=interaction, name=name)
-        if quest is None:
+    # @app_commands.command(name='delete', description='Delete a quest')
+    # @app_commands.default_permissions(administrator=True)
+    # @commands.has_guild_permissions(administrator=True)
+    # async def delete(self, interaction: discord.Interaction, name: str) -> None:
+    #     if not await self.bot.is_admin(interaction=interaction): return
+    #     quest = await self.find_with_send(interaction=interaction, name=name)
+    #     if quest is None:
+    #         return
+    #     for i, data in enumerate(self.bot.quest_db['quests']):
+    #         if data['id'] == quest.id:
+    #             self.bot.quest_db['quests'].pop(i)
+    #             break
+    #     for id, data in list(self.bot.quest_db['users'].items()):
+    #         data.pop(quest.id, None)
+    #         self.set_data(id=int(id), data=data, save=False)
+    #     self.bot.save_quests_db()
+    #     await interaction.response.send_message(
+    #         embed=self.bot.embed(
+    #             title='Quest Deleted',
+    #             description=f'Quest `{quest}` has been deleted.',
+    #         ),
+    #     )
+
+    @app_commands.command(name='my_quest', description='View your completed quests')
+    async def my_quest(self, interaction: discord.Interaction) -> None:
+        user = interaction.user
+        quest_list = []
+        userData = self.bot.user_db['users'][f'{user.id}']
+        data = self.data(id=user.id)
+        quests = self.bot.quest_db['quests']
+        if quests is None:
             return
-        for i, data in enumerate(self.bot.quest_db['quests']):
-            if data['id'] == quest.id:
-                self.bot.quest_db['quests'].pop(i)
-                break
-        for id, data in list(self.bot.quest_db['users'].items()):
-            data.pop(quest.id, None)
-            self.set_data(id=int(id), data=data, save=False)
-        self.bot.save_quests_db()
-        await interaction.response.send_message(
-            embed=self.bot.embed(
-                title='Quest Deleted',
-                description=f'Quest `{quest}` has been deleted.',
-            ),
+        for quest in quests:
+            if quest['id'] not in data:
+                if int(quest['messages']) <= userData['messages'] and int(quest['reactions_given']) <= userData['reactions_given'] and int(quest['clips_shared']) <=  userData['clips_shared'] and int(quest['time']) <= userData['time'] and (quest['activity_name'] in userData['playing_time']) and int(quest['playing_time']) <= userData['playing_time'][f'{quest['activity_name']}'] and ((quest['message_channelId'] is None) or((quest['message_channelId'] in userData['channel_messages'])  and (int(quest['message_count'])<= userData['channel_messages'][f'{quest['message_channelId']}']))) and         ((quest['time_channelId']is None) or((quest['time_channelId'] in userData['channel_time'])  and (int(quest['time_count'])<= userData['channel_time'][f'{quest['time_channelId']}']))) :
+                    self.bot.quest_db['users'][f'{user.id}'][f'{quest['id']}']=quest['name']
+                    self.bot.save_quest_db()
+                    quest_list.append(quest['name'])
+            else :
+                quest_list.append(quest['name'])
+        
+        embed = self.bot.embed(
+            title=f'Your Quests',
+            description="List of your quests"
         )
+        
+        for index, item in enumerate(quest_list):
+            embed.add_field(name=f"🌟 {item}", value="", inline=False)
 
+        await interaction.response.send_message(embed=embed)
 
     @app_commands.command(name='view', description='View a certain quest')
     async def view(self, interaction: discord.Interaction, name: str) -> None:
         quest = await self.find_with_send(interaction=interaction, name=name)
         if quest is None:
             return
-        embed = self.bot.embed(
-            title=f'Quest Information: **{quest}**',
-            description=(
-                f'Name : `{quest.name}`\n'
-                f'Description : `{quest.des}`\n'
-                f'Activities :\n'
-                f'  -Messages Sent : `{quest.messages}` messages\n'
-                f'  -Time in Voice Channels : `{math.trunc(int(quest.time)/360)}` hours\n'
-                f'  -Reactions Given : `{quest.reactions_given}` reactions\n'
-                f'  -Clips Shared : `{quest.clips_shared}` clips\n'
-                f'  -Playing Time : `{math.trunc(int(quest.playing_time)/360)}` hours on `{quest.game_name}`\n'
-                f'Badge(s) : `{quest.badge}`\n'
-            ),
-        )
-        await interaction.response.send_message(embed=embed)
+        
+        
+        if (quest.message_channelId is None and  quest.time_channelId is None):
+            embed = self.bot.embed(
+                title=f'Quest Information: **{quest}**',
+                description=(
+                    f'Name : `{quest.name}`\n'
+                    f'Description : `{quest.des}`\n'
+                    f'Activities :\n'
+                    f'  -Messages Sent : `{quest.messages}` messages\n'
+                    f'  -Time in Voice Channels : `{math.trunc(int(quest.time)/360)}` hours\n'
+                    f'  -Reactions Given : `{quest.reactions_given}` reactions\n'
+                    f'  -Clips Shared : `{quest.clips_shared}` clips\n'
+                    f'  -Activity Time : `{math.trunc(int(quest.playing_time)/360)}` hours on `{quest.activity_name}`\n'
+                    f'Badge(s) : `{quest.badge},{quest.badge1} `\n'
+                ),
+            )
+            await interaction.response.send_message(embed=embed)
+
+
+        elif (quest.message_channelId is not None and  quest.time_channelId is not None):
+            channel = self.bot.get_channel(int(quest.message_channelId))
+            message_channel = channel.name
+            channel1 = self.bot.get_channel(int(quest.time_channelId))
+            time_channel = channel1.name
+            embed = self.bot.embed(
+                title=f'Quest Information: **{quest}**',
+                description=(
+                    f'Name : `{quest.name}`\n'
+                    f'Description : `{quest.des}`\n'
+                    f'Activities :\n'
+                    f'  -Messages Sent : `{quest.messages}` messages\n'
+                    f'  -Messages Sent in `{message_channel}` : `{quest.message_count}` messages\n'
+                    f'  -Time in Voice Channels : `{math.trunc(int(quest.time)/360)}` hours\n'
+                    f'  -Time in `{time_channel}` Channel : `{math.trunc(int(quest.time_count)/360)}` hours\n'
+                    f'  -Reactions Given : `{quest.reactions_given}` reactions\n'
+                    f'  -Clips Shared : `{quest.clips_shared}` clips\n'
+                    f'  -Activity Time : `{math.trunc(int(quest.playing_time)/360)}` hours on `{quest.activity_name}`\n'
+                    f'Badge(s) : `{quest.badge},{quest.badge1} `\n'
+                ),
+            )
+            await interaction.response.send_message(embed=embed)    
+
+        elif (quest.message_channelId is not None):
+            channel = self.bot.get_channel(int(quest.message_channelId))
+            message_channel = channel.name
+            embed = self.bot.embed(
+                title=f'Quest Information: **{quest}**',
+                description=(
+                    f'Name : `{quest.name}`\n'
+                    f'Description : `{quest.des}`\n'
+                    f'Activities :\n'
+                    f'  -Messages Sent : `{quest.messages}` messages\n'
+                    f'  -Messages Sent in `{message_channel}` : `{quest.message_count}` messages\n'
+                    f'  -Time in Voice Channels : `{math.trunc(int(quest.time)/360)}` hours\n'
+                    f'  -Reactions Given : `{quest.reactions_given}` reactions\n'
+                    f'  -Clips Shared : `{quest.clips_shared}` clips\n'
+                    f'  -Activity Time : `{math.trunc(int(quest.playing_time)/360)}` hours on `{quest.activity_name}`\n'
+                    f'Badge(s) : `{quest.badge},{quest.badge1} `\n'
+                ),
+            )
+            await interaction.response.send_message(embed=embed)
+
+
+        elif (quest.time_channelId is not None):
+            channel = self.bot.get_channel(int(quest.time_channelId))
+            time_channel = channel.name
+            embed = self.bot.embed(
+                title=f'Quest Information: **{quest}**',
+                description=(
+                    f'Name : `{quest.name}`\n'
+                    f'Description : `{quest.des}`\n'
+                    f'Activities :\n'
+                    f'  -Messages Sent : `{quest.messages}` messages\n'
+                    f'  -Time in Voice Channels : `{math.trunc(int(quest.time)/360)}` hours\n'
+                    f'  -Time in `{time_channel}` Channel : `{math.trunc(int(quest.time_count)/360)}` hours\n'
+                    f'  -Reactions Given : `{quest.reactions_given}` reactions\n'
+                    f'  -Clips Shared : `{quest.clips_shared}` clips\n'
+                    f'  -Activity Time : `{math.trunc(int(quest.playing_time)/360)}` hours on `{quest.activity_name}`\n'
+                    f'Badge(s) : `{quest.badge},{quest.badge1} `\n'
+                ),
+            )  
+            await interaction.response.send_message(embed=embed)      
+
+            
+       # await interaction.response.send_message(embed=embed)
         
 
     def find(self, name: Optional[str] = None, id: Optional[str] = None) -> Optional[Quest]:
@@ -281,8 +397,23 @@ class Quests(commands.GroupCog, name='quest'):
             return [app_commands.Choice(name='No badges found', value='')]
         return found
     
+    @create.autocomplete('badge_name1')
+    async def create_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
+        current = current.lower()
+        try:
+            found: list[app_commands.Choice[str]] = [
+                app_commands.Choice(name=b['name'], value=b['name'])
+                for b in self.bot.badge_db['badges']
+                if current in b['name'].lower()
+            ]
+            if not found:
+                raise IndexError
+        except IndexError:
+            return [app_commands.Choice(name='No badges found', value='')]
+        return found
+    
 
-    @delete.autocomplete('name')
+    # @delete.autocomplete('name')
     @view.autocomplete('name')
     async def view_autocomplete(self, interaction: discord.Interaction, current: str) -> list[app_commands.Choice[str]]:
         current = current.lower()
