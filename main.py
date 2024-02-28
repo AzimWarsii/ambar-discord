@@ -21,6 +21,7 @@ if TYPE_CHECKING:
     from trophy import Trophies
     from item import Items
     from ambar import Ambar
+    from poll import Polls
 
 
 
@@ -41,8 +42,9 @@ class Bot(commands.Bot):
     item_cog: 'Items'
     ambar_cog: 'Ambar'
     event_cog: 'Events'
+    poll_cog: 'Polls'
     def __init__(self) -> None:
-        self.cog_names = ['tourney', 'badge', 'trophy', 'item', 'ambar', 'quest','event' ]
+        self.cog_names = ['tourney', 'badge', 'trophy', 'item', 'ambar', 'quest','event','poll' ]
         super().__init__(
             command_prefix=self.get_prefixes,
             activity=discord.Activity(type=discord.ActivityType.listening, name='you'),
@@ -161,6 +163,27 @@ async def Reload(ctx) -> None:
     await bot.load(re=True)
     await ctx.send('Successfully reloaded!')
 
+@bot.command(aliases=[])
+@commands.is_owner()
+async def Get(ctx) -> None:
+    for member in ctx.guild.members:
+        if f'{member.id}' not in bot.user_db['users']:   
+            bot.user_db['users'][f'{member.id}'] = {
+            "messages": 0,
+            "channel_messages": {},
+            "time": 0,
+            "channel_time": {},
+            "reactions_given": 0,
+            "clips_shared": 0,
+            "reactionsRecieved": 0,
+            "playing_time": {},
+            "eventsCheckin": [],
+            "eventsDuration": {}
+            }
+
+            bot.save_user_db()
+
+
 
 @bot.event
 async def on_command_error(ctx, error) -> None:
@@ -177,27 +200,16 @@ async def on_member_join(member):
     else:
         bot.user_db['users'][f'{member.id}'] = {
         "messages": 0,
-        "chnannel_messages": {
-                "id": 0
-            },
+        "channel_messages": {},
         "time": 0,
-        "channel_time": {
-                "id": 0
-            },
+        "channel_time": {},
         "reactions_given": 0,
         "clips_shared": 0,
         "reactionsRecieved": 0,
-        "playing_time": {
-            "Counter-Strike 12": 0,
-            "Counter-Strike 2": 0
-        },
+        "playing_time": {},
         "surveys": 0,
-        "eventsCheckin": [
-            "None"
-        ],
-        "eventsDuration": {
-                "id": 0
-            }
+        "eventsCheckin": [],
+        "eventsDuration": {}
         }
 
         bot.save_user_db()
