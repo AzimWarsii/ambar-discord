@@ -1,73 +1,16 @@
 {
     "events": [
         {
-            "id": "8a91e25ed47221da3e7387ce38b5eade",
-            "name": "test1",
-            "start_time": 1717225932.0,
-            "end_time": 1717226112.0,
-            "channel_id": "1205284334781595698",
-            "checkedin": [
-                "None",
-                938146587983626300
-            ],
-            "registered": [
-                "None",
-                938146587983626300
-            ]
-        },
-        {
-            "id": "c990773f2b46d87baad429786298e1ca",
-            "name": "test2",
-            "start_time": 1708781400.0,
-            "end_time": 1708782000.0,
-            "channel_id": "1205284334781595698",
+            "id": "d53eb0925c0804e05a6388d4cd9514da",
+            "name": "Stage Event",
+            "channel_id": "1214890669550604288",
+            "start_time": 1709908200.0,
+            "end_time": 1709911800.0,
             "checkedin": [
                 "None"
             ],
             "registered": [
                 "None"
-            ]
-        },
-        {
-            "id": "11e53780134571d46cfb47e96e55cbe8",
-            "name": "test3",
-            "start_time": 1708785600.0,
-            "end_time": 1708796600.0,
-            "channel_id": "1205284334781595698",
-            "checkedin": [
-                "None",
-                938146587983626300
-            ],
-            "registered": [
-                "None"
-            ]
-        },
-        {
-            "id": "970f9f084985bcaf5cde06b6cf602ebb",
-            "name": "NEW1",
-            "channel_id": "1205284334781595698",
-            "start_time": 1708794600.0,
-            "end_time": 1708798200.0,
-            "checkedin": [
-                "None"
-            ],
-            "registered": [
-                "None"
-            ]
-        },
-        {
-            "id": "8a91e25ed47221da3e7387ce38b5eade",
-            "name": "test12",
-            "start_time": 1708801737.0,
-            "end_time": 1817226112.0,
-            "channel_id": "1205284334781595698",
-            "checkedin": [
-                "None",
-                938146587983626300
-            ],
-            "registered": [
-                "None",
-                938146587983626300
             ]
         }
     ]

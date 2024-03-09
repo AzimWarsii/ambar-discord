@@ -19,74 +19,6 @@ User: TypeAlias = discord.User | discord.Member
 with open('config.json', encoding='utf8') as file: config = json.load(file)
 token = config.get('token')
 
-# class Event:
-#     saving_attributes: tuple[str, ...] = ('id', 'name',  'event_start_time' , 'event_end_time',)
-#     def __init__(self, cog: 'Events', id: Optional[str], name: str, event_start_time:str , event_end_time:str,  ) -> None:
-#         self.cog = cog
-#         self.id = id or os.urandom(16).hex()
-#         self.name = name
-#         self.event_start_time = event_start_time
-#         self.event_end_time = event_end_time
-
-
-#     def save(self) -> None:
-#         self.cog.bot.event_db['events'].append(
-#             {attr: getattr(self, attr) for attr in self.saving_attributes}
-#         )
-#         self.cog.bot.save_event_db()
-
-#     def __str__(self) -> str:
-#         # if self.prefix:
-#         #     return f'{self.prefix} {self.name}'
-#         return self.name
-
-
-# class CreationModal(discord.ui.Modal):
-    # def __init__(self, cog: 'Events', user:User, des:Optional[str], badge:str , badge1:Optional[str] , name:str, activity_name:str ) -> None:
-    #     super().__init__(timeout=300.0, title='Create Quest')
-    #     self.cog = cog
-    #     self.user = user
-    #     self.name = name
-    #     self.badge = badge
-    #     self.badge1 = badge1
-    #     self.des = des
-    #     self.activity_name = activity_name
-    
-    #     self.messages = discord.ui.TextInput(
-    #         label='Messages Sent',
-    #         placeholder='0',
-    #         required=False,
-    #     )
-
-
-    #     for text_input in [self.messages,self.reactions_given ,self.clips_shared,self.playing_time,self.time]:
-    #         # self.reactionsRecieved,self.surveys,self.eventsDuration,self.eventsCheckin]:
-    #         self.add_item(text_input)
-
-    # async def on_submit(self, interaction: discord.Interaction) -> None:
-       
-    #     messages, reactions_given, clips_shared, playing_time, time = self.messages.value ,self.reactions_given.value , self.clips_shared.value , self.playing_time.value ,self.time.value
-    #     if self.cog.find(name=self.name):
-    #         await interaction.response.send_message(
-    #             embed=self.cog.bot.embed('A quest with that name already exists.'),
-    #             ephemeral=True,
-    #         )
-    #         return
-        
-    #     event = Event(cog=self.cog, id=None, name=self.name, des=self.des , badge=self.badge, badge1=self.badge1, activity_name=self.activity_name , messages=messages , reactions_given=reactions_given , clips_shared = clips_shared, playing_time = playing_time, time=time )
-
-    #     event.save()
-
-    #     self.cog.bot.activity_db['tracked'].append(f'{self.activity_name}')
-    #     self.cog.bot.save_activity_db()
-    #     await interaction.response.send_message(
-    #         embed=self.cog.bot.embed(
-    #             title='Quest Created',
-    #             description=f'Quest `{event}` has been created.',
-    #         ),
-    #     )
-
-
 class Events(commands.GroupCog, name='event'):
     time =time.time()
     GUILD_ONLY = 2
@@ -129,13 +61,15 @@ class Events(commands.GroupCog, name='event'):
     async def create_guild_event(
         self, interaction: discord.Interaction,
         guild_id: str, event_name: str, 
-        event_description: str,  event_start_time: str, event_end_time: str,
-        channel_id:str
+        event_description: str,  event_start_time: str ,event_end_time:str, channel_id:str ,entity_type:Optional[str]=None,
     ) -> None:
         
+
           
         event_create_url = f'{self.base_api_url}/guilds/{guild_id}/scheduled-events'
-        entity_type = Events.VOICE
+        #entity_type = Events.EXTERNAL if channel_id is None else Events.VOICE
+        if entity_type is None :
+            entity_type =2
 
         event_data = json.dumps({
             "name": event_name,
@@ -145,7 +79,7 @@ class Events(commands.GroupCog, name='event'):
             "description": event_description,
             "channel_id": int(channel_id),
             "entity_metadata": None,
-            "entity_type": entity_type
+            "entity_type": int(entity_type)
         })
         id = os.urandom(16).hex()
 

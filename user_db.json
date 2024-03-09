@@ -1,111 +1,11 @@
 {
     "users": {
-        "352442476889505792": {
-            "messages": 103,
-            "channel_messages": {
-                "1194120978419155017": 3,
-                "1201999556401975346": 2
-            },
-            "time": 646.5651013851166,
-            "channel_time": {
-                "1205284334781595698": 16.162747383117676,
-                "1194120978419155018": 14.821958780288696,
-                "1194120978419155017": 1
-            },
-            "reactions_given": 15,
-            "clips_shared": 9,
-            "reactionsRecieved": 8,
-            "playing_time": {
-                "Counter-Strike 12": 69.92167234420776,
-                "Counter-Strike 2": 44.77347707748413
-            },
-            "surveys": 1,
-            "eventsCheckin": [
-                "8a91e25ed47221da3e7387ce38b5eade",
-                "11e53780134571d46cfb47e96e55cbe8"
-            ],
-            "eventsDuration": {
-                "8a91e25ed47221da3e7387ce38b5eade": 35.06564664840698
-            }
-        },
-        "756531892299497483": {
-            "messages": 0,
-            "channel_messages": {
-                "id": 0
-            },
-            "time": 0,
-            "channel_time": {
-                "id": 0
-            },
-            "reactions_given": 0,
-            "clips_shared": 0,
-            "reactionsRecieved": 0,
-            "playing_time": {
-                "Counter-Strike 2": 0
-            },
-            "surveys": 0,
-            "eventsCheckin": [
-                "None"
-            ],
-            "eventsDuration": {
-                "id": 0
-            }
-        },
-        "1120357420133273620": {
-            "messages": 0,
-            "channel_messages": {
-                "id": 0
-            },
-            "time": 0,
-            "channel_time": {
-                "id": 0
-            },
-            "reactions_given": 0,
-            "clips_shared": 0,
-            "reactionsRecieved": 0,
-            "playing_time": {
-                "Counter-Strike 2": 0
-            },
-            "surveys": 0,
-            "eventsCheckin": [
-                "None"
-            ],
-            "eventsDuration": {
-                "id": 0
-            }
-        },
-        "1194121846640103474": {
-            "messages": 0,
-            "channel_messages": {
-                "id": 0
-            },
-            "time": 0,
-            "channel_time": {
-                "id": 0
-            },
-            "reactions_given": 21,
-            "clips_shared": 0,
-            "reactionsRecieved": 0,
-            "playing_time": {
-                "Counter-Strike 2": 0
-            },
-            "surveys": 0,
-            "eventsCheckin": [
-                "None"
-            ],
-            "eventsDuration": {
-                "id": 0
-            }
-        },
         "938146587983626300": {
-            "messages": 2,
+            "messages": 0,
             "channel_messages": {
-                "1194120978419155017": 1
             },
-            "time": 12.230700254440308,
+            "time": 0,
             "channel_time": {
-                "1205284334781595698": 8.385870933532715,
-                "1194120978419155018": 3.8448293209075928
             },
             "reactions_given": 0,
             "clips_shared": 0,
@@ -113,7 +13,7 @@
             "playing_time": {},
             "eventsCheckin": [],
             "eventsDuration": {
-                "8a91e25ed47221da3e7387ce38b5eade": 8.385870933532715
+
             }
         }
     }
